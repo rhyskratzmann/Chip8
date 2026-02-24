@@ -205,12 +205,12 @@ void Chip8::LD_I_addr(uint16_t nnn) {
 }
 
 void Chip8::DRW_Vx_Vy_nibble(uint8_t x, uint8_t y, uint8_t n) {
-    auto vx = registers[x];
-    auto vy = registers[y];
-    for ( int row = 0; row < n; row++) {
+    auto vx = registers[x] % DISPLAY_WIDTH;
+    auto vy = registers[y] % DISPLAY_HEIGHT;
+    for (int row = 0; row < n; row++) {
         auto spriteByte = memory[i + row];
         //index of first bit
-        auto bitIndex= vx + ((vy + row)* DISPLAY_WIDTH);
+        auto bitIndex = vx + (vy + row) % DISPLAY_HEIGHT * DISPLAY_WIDTH;
         //first byte
         auto byte = bitIndex >> 3;
         auto bitOffset = vx & 7;
@@ -220,12 +220,12 @@ void Chip8::DRW_Vx_Vy_nibble(uint8_t x, uint8_t y, uint8_t n) {
         display[byte] ^= leftSprite;
         bool collisionRight {};
         if (bitOffset) {
-            auto rightByte = byte + 1 - (((byte % 8) == 7) * 8);
+            auto rightByte = byte + 1 - ((byte & 7) == 7) * 8;
             auto rightSprite = spriteByte << (8 - bitOffset);
             collisionRight = display[rightByte] & rightSprite;
             display[rightByte] ^= rightSprite;
         }
-        registers[0xF] = collisionLeft | collisionRight;
+        registers[0xF] |=  collisionLeft | collisionRight;
     }
 }
 
