@@ -1,7 +1,7 @@
-#include <iostream>
-#include "SDL3/SDL.h"
-#include "Chip8.h"
 #include <chrono>
+#include <iostream>
+#include "../../core/src/Chip8.h"
+#include "SDL3/SDL.h"
 
 int main(int argc, char** argv){
     std::string path;
@@ -11,7 +11,6 @@ int main(int argc, char** argv){
     else {
         std::getline(std::cin, path);
     }
-
 
 
     Chip8 chip8 =  Chip8();
@@ -132,7 +131,7 @@ int main(int argc, char** argv){
         }
 
         // Create surface from converted pixels
-        SDL_Surface *surface = SDL_CreateSurfaceFrom(DISPLAY_WIDTH, DISPLAY_HEIGHT, 
+        SDL_Surface *surface = SDL_CreateSurfaceFrom(DISPLAY_WIDTH, DISPLAY_HEIGHT,
             SDL_PIXELFORMAT_ARGB8888, pixels, DISPLAY_WIDTH * sizeof(uint32_t));
         texture = SDL_CreateTextureFromSurface(renderer, surface);
         SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
